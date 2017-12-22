@@ -133,8 +133,7 @@ extension ViewController{
       multipartFormData:{ MultipartFormData in
       MultipartFormData.append(imageData, withName: "imagefile", fileName: "image.jpg", mimeType: "image/jpeg")
     },
-      to: "http://api.imagga.com/v1/content",
-      headers: ["Authorization": "Basic YWNjX2QzM2MyOWE4NWFlZTVhMTo3MWNjYWFhMDU1ZDJjNTQzZjBjNjFjNjg0YWNkODk5Mg=="],
+      with:ImaggaRouter.content,
       encodingCompletion: { encodingResult in
         switch encodingResult {
         case .success(let upload, _, _):
@@ -172,9 +171,7 @@ extension ViewController{
   }
   
   func downloadTags(contentID:String,completion:@escaping(([String]) -> Void)){
-    Alamofire.request("http://api.imagga.com/v1/tagging",
-                      parameters: ["content":contentID],
-                      headers: ["Authorization": "Basic YWNjX2QzM2MyOWE4NWFlZTVhMTo3MWNjYWFhMDU1ZDJjNTQzZjBjNjFjNjg0YWNkODk5Mg=="])
+    Alamofire.request(ImaggaRouter.tags(contentID))
       .responseJSON { response in
         guard response.result.isSuccess else{
           print("获取标签时发生错误:\(String(describing: response.result.error))")
@@ -200,9 +197,7 @@ extension ViewController{
   }
   
   func downloadColors(contentID:String,completion:@escaping(([PhotoColor]) -> Void)){
-    Alamofire.request("http://api.imagga.com/v1/colors",
-                      parameters: ["content":contentID],
-                      headers:["Authorization": "Basic YWNjX2QzM2MyOWE4NWFlZTVhMTo3MWNjYWFhMDU1ZDJjNTQzZjBjNjFjNjg0YWNkODk5Mg=="] )
+    Alamofire.request(ImaggaRouter.colors(contentID))
       .responseJSON{ response in
         guard response.result.isSuccess else{
           print("获取颜色时发生错误:\(String(describing: response.result.error))")
